@@ -7,8 +7,12 @@ import { Model } from 'mongoose';
 export class ChatService {
   constructor(@InjectModel(Chat.name) private chatModel: Model<ChatDocument>) {}
 
-  async create(username: string, message: string): Promise<Chat> {
-    return this.chatModel.create({ username, message });
+  async create(
+    roomId: string,
+    username: string,
+    message: string,
+  ): Promise<Chat> {
+    return this.chatModel.create({ roomId, username, message });
   }
 
   async findAll(): Promise<Chat[]> {

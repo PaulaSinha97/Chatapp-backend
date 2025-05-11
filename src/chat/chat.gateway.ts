@@ -7,7 +7,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 
 @WebSocketGateway({
@@ -37,10 +37,22 @@ export class ChatGateway
 
   @SubscribeMessage('sendMessage')
   async handleMessage(
-    @MessageBody() data: { username: string; message: string },
+    @MessageBody() data: { roomId: string; username: string; message: string },
   ) {
-    const msg = await this.chatService.create(data.username, data.message);
-    this.server.emit('newMessage', msg);
+    console.log("MessageBody",data)
+    const msg = await this.chatService.create(
+      data.roomId,
+      data.username,
+      data.message,
+    );
+    this.server.to(data.roomId).emit('newMessage', msg);
     return msg;
+  }
+
+  @SubscribeMessage('join_room')
+  async handleJoinRoom(client: Socket, roomId: string) {
+    console.log("MessageBody",roomId)
+    client.join(roomId);
+    console.log(`Client ${client.id} joined room ${roomId}`);
   }
 }

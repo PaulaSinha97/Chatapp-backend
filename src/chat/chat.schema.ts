@@ -1,10 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 
 export type ChatDocument = Chat & Document;
 
 @Schema()
 export class Chat {
+  @Prop({
+    type: String,
+    ref: 'roomId',
+    required: true,
+  })
+  roomId: Types.ObjectId;
+
   @Prop()
   username: string;
 

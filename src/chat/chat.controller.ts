@@ -11,7 +11,12 @@ export class ChatController {
   }
 
   @Post()
-  sendMessage(@Body() body: { username: string; message: string }) {
-    return this.chatService.create(body.username, body.message);
+  sendMessage(@Body() body: {roomId:string, username: string; message: string }) {
+    return this.chatService.create(body.roomId,body.username, body.message);
   }
+
+  //  @Post()
+  // sendMessage(@Body() body: {roomId:string, username: string; message: string }) {
+  //   return this.chatService.create(body.roomId,body.username, body.message);
+  // }
 }
