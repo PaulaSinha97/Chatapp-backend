@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { ChatService } from './chat.service';
+import { Chat, Message } from './chat.schema';
 
 @Controller('chat')
 export class ChatController {
@@ -10,13 +11,13 @@ export class ChatController {
     return this.chatService.findAll();
   }
 
-  @Post()
-  sendMessage(@Body() body: {roomId:string, username: string; message: string }) {
-    return this.chatService.create(body.roomId,body.username, body.message);
-  }
-
-  //  @Post()
-  // sendMessage(@Body() body: {roomId:string, username: string; message: string }) {
-  //   return this.chatService.create(body.roomId,body.username, body.message);
+  // async getMessages(roomId: string): Promise<any[]> {
+  //   const room = await this.chatRoomModel.findOne({ roomId });
+  //   return room ? room.messages : [];
   // }
+
+  @Post()
+  sendMessage(@Body() body: { roomId: string; message: Message }) {
+    return this.chatService.addMessage(body.roomId, [body.message]);
+  }
 }

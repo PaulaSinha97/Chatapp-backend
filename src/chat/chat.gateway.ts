@@ -39,19 +39,18 @@ export class ChatGateway
   async handleMessage(
     @MessageBody() data: { roomId: string; username: string; message: string },
   ) {
-    console.log("MessageBody",data)
-    const msg = await this.chatService.create(
-      data.roomId,
-      data.username,
-      data.message,
-    );
-    this.server.to(data.roomId).emit('newMessage', msg);
-    return msg;
+    const msg = {
+      username: data.username,
+      message: data.message,
+      createdAt: new Date(),
+    };
+    const returnMsg = await this.chatService.addMessage(data.roomId, [msg]);
+    this.server.to(data.roomId).emit('newMessage', returnMsg);
+    return returnMsg;
   }
 
   @SubscribeMessage('join_room')
   async handleJoinRoom(client: Socket, roomId: string) {
-    console.log("MessageBody",roomId)
     client.join(roomId);
     console.log(`Client ${client.id} joined room ${roomId}`);
   }

@@ -28,27 +28,20 @@ export class AuthService {
     });
 
     const token = this.jwtService.sign({ id: user._id });
-
     return { token };
   }
 
-  async login(loginDto: LoginDto): Promise<{ token: string }> {
+  async login(loginDto: LoginDto): Promise<{ token: string; id:string }> {
     const { email, password } = loginDto;
-console.log(">>>>>>>>>2",password,email)
     const user = await this.userModel.findOne({ email });
-    console.log(">>>>>>>>>3",user)
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    console.log(">>>>>>>>>4",user)
     const isPasswordMatched = await bcrypt.compare(password, user?.password);
-
     if (!isPasswordMatched) {
       // throw new ('Invalid email or password');
     }
-
     const token = this.jwtService.sign({ id: user._id });
-
-    return { token };
+    return { token, id: user._id };
   }
 }

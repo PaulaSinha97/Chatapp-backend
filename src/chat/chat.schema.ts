@@ -4,14 +4,7 @@ import mongoose, { Document, Types } from 'mongoose';
 export type ChatDocument = Chat & Document;
 
 @Schema()
-export class Chat {
-  @Prop({
-    type: String,
-    ref: 'roomId',
-    required: true,
-  })
-  roomId: Types.ObjectId;
-
+export class Message {
   @Prop()
   username: string;
 
@@ -20,6 +13,29 @@ export class Chat {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+}
+
+const MessageSchema = SchemaFactory.createForClass(Message);
+
+@Schema()
+export class Chat {
+  @Prop({
+    type: String,
+    ref: 'roomId',
+    required: true,
+    unique: true,
+    index: true,
+  })
+  roomId: Types.ObjectId;
+
+  @Prop({ type: [MessageSchema], default: [] })
+  messages: [
+    {
+      username: string;
+      message: string;
+      createdAt: Date;
+    },
+  ];
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
