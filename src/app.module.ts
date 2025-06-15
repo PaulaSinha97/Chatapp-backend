@@ -6,8 +6,13 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { UserInterceptor } from './interceptor/currentUser.interceptor';
+import { AuthGuard } from './auth/guard/currentUser.guard';
+import { JwtModule } from '@nestjs/jwt';
+// import { JwtStrategy } from './auth/strategies/jwt.strategy';
 // import {configModule} from '@nestjs/config'
 @Module({
   imports: [
@@ -22,8 +27,27 @@ import { ChatModule } from './chat/chat.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    // JwtModule.registerAsync({
+    //   inject: [ConfigService],
+    //   useFactory: (config: ConfigService) => {
+    //     return {
+    //       secret: 'abc123',
+    //       signOptions: { expiresIn: '1h' },
+    //     };
+    //   },
+    // }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthGuard,
+    // },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: UserInterceptor,
+    // },
+  ],
 })
 export class AppModule {}

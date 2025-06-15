@@ -16,8 +16,8 @@ export class ChatController {
   //   return room ? room.messages : [];
   // }
 
-  @Post()
-  sendMessage(@Body() body: { roomId: string; message: Message }) {
-    return this.chatService.addMessage(body.roomId, [body.message]);
-  }
+  // @Post()
+  // sendMessage(@Body() body: { roomId: string; message: Message }) {
+  //   return this.chatService.addMessage(body.roomId, [body.message]);
+  // }
 }

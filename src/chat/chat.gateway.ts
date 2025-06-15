@@ -9,6 +9,9 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from 'src/decorator/currentUser.decorator';
 
 @WebSocketGateway({
   cors: {
@@ -36,17 +39,18 @@ export class ChatGateway
   }
 
   @SubscribeMessage('sendMessage')
+  // @UseGuards(AuthGuard)
   async handleMessage(
     @MessageBody()
     data: {
       roomId?: string;
-      senderId: string;
       message: string;
       receiverId: string;
     },
+    @CurrentUser() user,
   ) {
     const msg = {
-      senderId: data.senderId,
+      // senderId: data.senderId,
       receiverId: data.receiverId,
       message: data.message,
       createdAt: new Date(),

@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
-    const {name,  email, password } = signUpDto;
+    const { name, email, password } = signUpDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -31,7 +31,7 @@ export class AuthService {
     return { token };
   }
 
-  async login(loginDto: LoginDto): Promise<{ token: string; id:string }> {
+  async login(loginDto: LoginDto): Promise<{ id: string }> {
     const { email, password } = loginDto;
     const user = await this.userModel.findOne({ email });
     if (!user) {
@@ -41,7 +41,8 @@ export class AuthService {
     if (!isPasswordMatched) {
       // throw new ('Invalid email or password');
     }
-    const token = this.jwtService.sign({ id: user._id });
-    return { token, id: user._id };
+    // user id fetched from DB
+    // const token = this.jwtService.sign({ id: user._id });
+    return { id: user._id };
   }
 }
