@@ -17,8 +17,9 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: any): string | undefined {
+    // use this link https://stackoverflow.com/questions/58670553/nestjs-gateway-websocket-how-to-send-jwt-access-token-through-socket-emit
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    console.log('hereeee', token, type);
+    console.log('hereeeeefef', token, type);
     return type === 'Bearer' ? token : undefined;
   }
 
