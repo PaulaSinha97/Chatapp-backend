@@ -11,9 +11,10 @@ import { ChatModule } from './chat/chat.module';
 // import {configModule} from '@nestjs/config'
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/tushar_workspace'),
+    // MongooseModule.forRoot('mongodb://localhost:27017/tushar_workspace'),
+    MongooseModule.forRoot('mongodb://127.0.0.1:27017/some_database'),
     ProductsModule,
-    MongooseModule.forRoot(process.env.MONGO_URI),
+    // MongooseModule.forRoot(process.env.MONGO_URI),
     UserModule,
     AuthModule,
     ChatModule,

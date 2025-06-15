@@ -37,10 +37,17 @@ export class ChatGateway
 
   @SubscribeMessage('sendMessage')
   async handleMessage(
-    @MessageBody() data: { roomId: string; username: string; message: string },
+    @MessageBody()
+    data: {
+      roomId?: string;
+      senderId: string;
+      message: string;
+      receiverId: string;
+    },
   ) {
     const msg = {
-      username: data.username,
+      senderId: data.senderId,
+      receiverId: data.receiverId,
       message: data.message,
       createdAt: new Date(),
     };
