@@ -11,6 +11,12 @@ export class Message {
   @Prop()
   message: string;
 
+  @Prop()
+  senderId: string;
+
+  @Prop()
+  receiverId: string;
+
   @Prop({ default: Date.now })
   createdAt: Date;
 }
@@ -33,6 +39,8 @@ export class Chat {
     {
       username: string;
       message: string;
+      senderId: string;
+      receiverId: string;
       createdAt: Date;
     },
   ];
