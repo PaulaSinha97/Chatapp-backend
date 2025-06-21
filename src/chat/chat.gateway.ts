@@ -12,6 +12,7 @@ import { ChatService } from './chat.service';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/decorator/currentUser.decorator';
 import { AuthGuard } from 'src/auth/guard/currentUser.guard';
+import { RequestService } from 'src/service/request.service';
 
 @WebSocketGateway({
   cors: {
@@ -24,7 +25,10 @@ export class ChatGateway
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly requestService: RequestService,
+  ) {}
 
   afterInit() {
     console.log('WebSocket Gateway initialized');
@@ -38,7 +42,7 @@ export class ChatGateway
     console.log(`Client disconnected: ${client.id}`);
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @SubscribeMessage('sendMessage')
   async handleMessage(
     @MessageBody()
@@ -47,8 +51,10 @@ export class ChatGateway
       message: string;
       receiverId: string;
     },
-    @CurrentUser() user_id,
+    // @CurrentUser() user_id,
   ) {
+    // console.log('user_iduser_iduser_id', user_id);/
+    const user_id = this.requestService.getUserId();
     console.log('user_iduser_iduser_id', user_id);
     const msg = {
       senderId: user_id,

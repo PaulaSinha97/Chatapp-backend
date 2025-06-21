@@ -9,14 +9,14 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/signup')
-  signUp(@Body() signUpDto: SignUpDto): Promise<{ token: string }> {
+  signUp(@Body() signUpDto: SignUpDto): Promise<string> {
     console.log('>>>>>>>', signUpDto);
     return this.authService.signUp(signUpDto);
   }
 
   @Post('/login')
-  @UseGuards(JwtAuthGuard)
-  login(@Body() loginDto: LoginDto): Promise<{ id: string }> {
+  // @UseGuards(JwtAuthGuard)
+  login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
     console.log('req', loginDto);
     return this.authService.login(loginDto);
   }

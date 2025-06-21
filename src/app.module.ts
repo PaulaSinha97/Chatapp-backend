@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { AppController } from './app.controller';
@@ -12,6 +12,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { UserInterceptor } from './interceptor/currentUser.interceptor';
 import { AuthGuard } from './auth/guard/currentUser.guard';
 import { JwtModule } from '@nestjs/jwt';
+import { RequestService } from './service/request.service';
+import { AuthenticationMiddleware } from './auth/middleware/authentication.middleware';
 // import { JwtStrategy } from './auth/strategies/jwt.strategy';
 // import {configModule} from '@nestjs/config'
 @Module({
@@ -40,6 +42,7 @@ import { JwtModule } from '@nestjs/jwt';
   controllers: [AppController],
   providers: [
     AppService,
+    RequestService,
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
@@ -50,4 +53,11 @@ import { JwtModule } from '@nestjs/jwt';
     // },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthenticationMiddleware)
+      .exclude('/auth/signup')
+      .forRoutes('*');
+  }
+}
