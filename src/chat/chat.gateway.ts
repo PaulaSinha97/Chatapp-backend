@@ -45,14 +45,14 @@ export class ChatGateway
     data: {
       roomId?: string;
       message: string;
-      receiverId: string;
+      senderId: string;
     },
     @CurrentUser() user_id,
   ) {
     console.log('user_iduser_iduser_id', user_id);
     const msg = {
-      senderId: user_id,
-      receiverId: data.receiverId,
+      senderId: data.senderId,
+      receiverId: user_id,
       message: data.message,
       createdAt: new Date(),
     };

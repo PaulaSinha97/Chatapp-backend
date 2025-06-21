@@ -11,7 +11,6 @@ export class ChatService {
   async findOrCreateRoom(roomId: string, message: any): Promise<Chat> {
     const room = await this.chatModel.findOne({ roomId });
     if (!room) {
-      // room = new this.chatModel({ roomId });
       return this.create(uuidv4(), message);
     } else {
       return this.updateChat(roomId, message);
