@@ -7,7 +7,11 @@ export class AuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(context); // Extract user from token
+    console.log('eeeeeeeeeeeee', request);
+    const token =
+      this.extractTokenFromHeaderFromWS(context) ||
+      this.extractTokenFromHeaderFromHttp(request); // Extract user from token
+    console.log('token down', token);
     const user = this.validateToken(token);
     if (user) {
       request.user = user; // Attach user to request
@@ -16,15 +20,19 @@ export class AuthGuard implements CanActivate {
     return false;
   }
 
-  private extractTokenFromHeader(context: any): string | undefined {
+  private extractTokenFromHeaderFromHttp(request: any): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
+  }
+
+  private extractTokenFromHeaderFromWS(context: any): string | undefined {
     // use this link https://stackoverflow.com/questions/58670553/nestjs-gateway-websocket-how-to-send-jwt-access-token-through-socket-emit
     // const [type, token] = request.headers.authorization?.split(' ') ?? [];
     const [type, token] =
       context
-        .switchToWs()
-        .getClient()
-        .handshake.headers.authorization.split(' ') ?? [];
-    console.log('hereeeeefef change', token, type);
+        ?.switchToWs()
+        ?.getClient()
+        ?.handshake?.headers?.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
 
