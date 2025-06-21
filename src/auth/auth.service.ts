@@ -16,22 +16,22 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
+  async signUp(signUpDto: SignUpDto): Promise<string> {
     const { name, email, password } = signUpDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.userModel.create({
+    await this.userModel.create({
       name,
       email,
       password: hashedPassword,
     });
 
-    const token = this.jwtService.sign({ id: user._id });
-    return { token };
+    // const token = this.jwtService.sign({ id: user._id });
+    return 'Sign in success';
   }
 
-  async login(loginDto: LoginDto): Promise<{ id: string }> {
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
     const user = await this.userModel.findOne({ email });
     if (!user) {
@@ -39,10 +39,11 @@ export class AuthService {
     }
     const isPasswordMatched = await bcrypt.compare(password, user?.password);
     if (!isPasswordMatched) {
-      // throw new ('Invalid email or password');
+      throw new UnauthorizedException();
     }
     // user id fetched from DB
     // const token = this.jwtService.sign({ id: user._id });
-    return { id: user._id };
+    const token = this.jwtService.sign({ id: user._id });
+    return { token };
   }
 }
