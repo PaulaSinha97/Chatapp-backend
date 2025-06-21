@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Chat, ChatDocument, Message } from './chat.schema';
 import { Model } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ChatService {
@@ -11,7 +12,7 @@ export class ChatService {
     const room = await this.chatModel.findOne({ roomId });
     if (!room) {
       // room = new this.chatModel({ roomId });
-      return this.create(roomId, message);
+      return this.create(uuidv4(), message);
     } else {
       return this.updateChat(roomId, message);
     }
@@ -41,7 +42,7 @@ export class ChatService {
           messages: { ...mm[0] },
         },
       },
-      { new: true }
+      { new: true },
     ) as any;
   }
 }

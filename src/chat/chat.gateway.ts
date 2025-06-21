@@ -9,6 +9,9 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser } from 'src/decorator/currentUser.decorator';
+import { AuthGuard } from 'src/auth/guard/currentUser.guard';
 
 @WebSocketGateway({
   cors: {
@@ -35,12 +38,21 @@ export class ChatGateway
     console.log(`Client disconnected: ${client.id}`);
   }
 
+  @UseGuards(AuthGuard)
   @SubscribeMessage('sendMessage')
   async handleMessage(
-    @MessageBody() data: { roomId: string; username: string; message: string },
+    @MessageBody()
+    data: {
+      roomId?: string;
+      message: string;
+      receiverId: string;
+    },
+    @CurrentUser() user_id,
   ) {
+    console.log('user_iduser_iduser_id', user_id);
     const msg = {
-      username: data.username,
+      senderId: user_id,
+      receiverId: data.receiverId,
       message: data.message,
       createdAt: new Date(),
     };

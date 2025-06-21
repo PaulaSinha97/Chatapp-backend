@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
-} from "class-validator";
+} from 'class-validator';
 
 export class CreateUserDTO {
   @IsString()
@@ -17,5 +17,4 @@ export class CreateUserDTO {
   @IsEmail()
   @IsNotEmpty()
   email: string;
-
 }
