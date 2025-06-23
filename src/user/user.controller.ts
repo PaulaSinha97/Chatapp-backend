@@ -30,10 +30,11 @@ export class UserController {
     return this.usersService.findOne(user_id);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.usersService.findAll();
-  // }
+  @Get('/allFriends')
+  @UseGuards(AuthGuard)
+  findAll(@CurrentUser() user_id) {
+    return this.usersService.findAll(user_id);
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {

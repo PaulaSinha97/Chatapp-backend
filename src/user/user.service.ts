@@ -28,9 +28,8 @@ export class UserService {
     }
   }
 
-  async findAll() {
-    const users = await this.userSchema.find();
-
+  async findAll(currentUser: string) {
+    const users = await this.userSchema.find({ _id: { $ne: currentUser } });
     return users;
   }
 
