@@ -45,19 +45,21 @@ export class ChatGateway
     data: {
       roomId?: string;
       message: string;
-      senderId: string;
+      receiverId: string;
     },
     @CurrentUser() user_id,
   ) {
     console.log('user_iduser_iduser_id', user_id);
     const msg = {
-      senderId: data.senderId,
-      receiverId: user_id,
+      senderId: user_id,
+      receiverId: data.receiverId,
       message: data.message,
       createdAt: new Date(),
     };
     const returnMsg = await this.chatService.addMessage(data.roomId, [msg]);
-    this.server.to(data.roomId).emit('newMessage', returnMsg);
+    console.log("yaha tak aya???")
+    // this.server.to(data.roomId).emit('newMessage', returnMsg);
+    this.server.emit('newMessage', returnMsg);
     return returnMsg;
   }
 

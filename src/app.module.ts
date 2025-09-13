@@ -17,7 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     // MongooseModule.forRoot('mongodb://localhost:27017/tushar_workspace'),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/some_database'),
+    MongooseModule.forRoot('mongodb://localhost:27017/chat'),
     ProductsModule,
     // MongooseModule.forRoot(process.env.MONGO_URI),
     UserModule,

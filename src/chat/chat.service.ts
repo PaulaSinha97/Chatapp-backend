@@ -29,8 +29,10 @@ export class ChatService {
     return this.chatModel.create({ roomId, messages: message });
   }
 
-  async findAll(): Promise<Chat[]> {
-    return this.chatModel.find().sort({ createdAt: 1 }).exec();
+  async findChat(roomId: string): Promise<Chat[]> {
+    return this.chatModel.findOne({
+      roomId,
+    });
   }
 
   async updateChat(roomId: string, mm: Message[]): Promise<Chat> {
@@ -43,5 +45,16 @@ export class ChatService {
       },
       { new: true },
     ) as any;
+  }
+
+  async findRoomIdWithOwnerAndFriendsId(ownerId: string, friendId: string) {
+    console.log('ownerId', ownerId, friendId);
+    return this.chatModel.findOne(
+      {
+        messages: { $elemMatch: { senderId: ownerId, receiverId: friendId } },
+      },
+
+      { roomId: 1 },
+    );
   }
 }
